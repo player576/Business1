@@ -1,17 +1,20 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import requests
+from huggingface_hub import InferenceClient
 
 app = Flask(__name__)
 CORS(app)
 
-# Сервер сам возьмет токен из переменных окружения (Environment Variables) Render
+# Берем токен из переменных окружения Render
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
-# Используем отличную модель Mistral
-API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct"
-headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+# Инициализируем официальный клиент Hugging Face
+# Он сам под капотом решает проблемы с DNS и пулами соединений
+client = InferenceClient(
+    model="meta-llama/Meta-Llama-3-8B-Instruct",
+    token=HF_TOKEN
+)
 
 SYSTEM_INSTRUCTION = (
     "Ты — умный AI-ассистент на сайте веб-разработчика Данила. Твоя задача — помогать клиентам "
@@ -31,30 +34,26 @@ def chat():
     if not HF_TOKEN:
         return jsonify({'error': 'Токен HF_TOKEN не настроен на хостинге Render'}), 500
 
-    # Формируем промпт для модели
-    prompt = f"<s>[SYSTEM] {SYSTEM_INSTRUCTION} [/SYSTEM] [USER] {user_message} [/USER] [ASSISTANT]"
-
     try:
-        payload = {
-            "inputs": prompt,
-            "parameters": {"max_new_tokens": 500, "temperature": 0.7}
-        }
+        # Формируем структуру сообщений, которую Llama 3 понимает идеально
+        messages = [
+            {"role": "system", "content": SYSTEM_INSTRUCTION},
+            {"role": "user", "content": user_message}
+        ]
         
-        response = requests.post(API_URL, headers=headers, json=payload)
-        result = response.json()
+        # Делаем запрос через официальный клиент
+        response = client.chat_completion(
+            messages=messages,
+            max_tokens=500,
+            temperature=0.7
+        )
 
-        # Извлекаем чистый ответ
-        if isinstance(result, list) and "generated_text" in result[0]:
-            full_text = result[0]["generated_text"]
-            ai_reply = full_text.split("[ASSISTANT]")[-1].strip()
-            return jsonify({'reply': ai_reply})
-        else:
-            print(f"Ошибка Hugging Face: {result}")
-            return jsonify({'error': 'Модель загружается или произошел сбой Hugging Face'}), 500
+        ai_reply = response.choices[0].message.content
+        return jsonify({'reply': ai_reply})
 
     except Exception as e:
-        print(f"Ошибка сервера: {e}")
-        return jsonify({'error': str(e)}), 500
+        print(f"!!! КРИТИЧЕСКАЯ ОШИБКА СЕРВЕРА: {e}")
+        return jsonify({'error': f"Ошибка сети или ИИ: {str(e)}"}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
