@@ -9,7 +9,7 @@ CORS(app)
 
 # 1. СЮДА ВСТАВЛЯЕШЬ СВОЙ API КЛЮЧ
 # На хостинге ты сможешь задать его через переменную окружения, а пока для тестов пишем прямо в код
-GEMINI_API_KEY = "AQ.Ab8RN6L7VtxG1LqEvKqohx8MIB0znfc2yRWrnTZqscfGfPa7Eg"
+GEMINI_API_KEY = "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"
 
 # Инициализируем настройки Google Gemini
 genai.configure(api_key=GEMINI_API_KEY)
