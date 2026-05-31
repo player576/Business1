@@ -10,7 +10,7 @@ CORS(app)
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
 # Используем отличную модель Mistral
-API_URL = "https://api-inference.huggingface.co/models/MistralAI/Mistral-7B-Instruct-v0.3"
+API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct"
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 SYSTEM_INSTRUCTION = (
