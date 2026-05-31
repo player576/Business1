@@ -6,21 +6,21 @@ from huggingface_hub import InferenceClient
 app = Flask(__name__)
 CORS(app)
 
-# Берем токен из переменных окружения Render
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
-# Инициализируем официальный клиент Hugging Face
-# Он сам под капотом решает проблемы с DNS и пулами соединений
+# Используем продвинутую модель, которая шикарно понимает контекст
 client = InferenceClient(
     model="meta-llama/Meta-Llama-3-8B-Instruct",
     token=HF_TOKEN
 )
 
+# Делаем инструкцию более жёсткой и детальной
 SYSTEM_INSTRUCTION = (
-    "Ты — умный AI-ассистент на сайте веб-разработчика Данила. Твоя задача — помогать клиентам "
-    "сформулировать их идею для сайта или Telegram-бота, отвечать на вопросы по веб-разработке "
-    "и мягко подводить их к тому, чтобы они нажали кнопку 'Связаться со мной' для обсуждения заказа. "
-    "Будь вежливым, профессиональным, лаконичным и отвечай строго на языке пользователя."
+    "Ты — продвинутый ИИ-ассистент, встроенный в сайт талантливого веб-разработчика Данила. "
+    "Твоя цель — общаться с потенциальными клиентами живым, человеческим языком. Избегай шаблонных фраз вроде 'Какой сайт вы хотите?'. "
+    "Вместо этого веди диалог как эксперт: спроси про бизнес клиента, предложи интересную фишку для их будущего сайта или Telegram-бота. "
+    "Отвечай кратко (2-4 предложения), дружелюбно, профессионально и исключительно на том языке, на котором пишет пользователь. "
+    "В конце ненавязчиво предложи нажать кнопку 'Связаться со мной', чтобы обсудить ТЗ напрямую с Данилом."
 )
 
 @app.route('/api/chat', methods=['POST'])
@@ -32,28 +32,30 @@ def chat():
         return jsonify({'error': 'Сообщение не может быть пустым'}), 400
 
     if not HF_TOKEN:
-        return jsonify({'error': 'Токен HF_TOKEN не настроен на хостинге Render'}), 500
+        return jsonify({'error': 'Токен HF_TOKEN не настроен'}), 500
 
     try:
-        # Формируем структуру сообщений, которую Llama 3 понимает идеально
+        # Правильный формат диалога для Llama 3 Instruct
+        # Модель Обязана увидеть 'system' и 'user' в таком виде, чтобы включить свой 'интеллект'
         messages = [
             {"role": "system", "content": SYSTEM_INSTRUCTION},
             {"role": "user", "content": user_message}
         ]
         
-        # Делаем запрос через официальный клиент
-        response = client.chat_completion(
+        # Запрашиваем генерацию текста
+        completion = client.chat_completion(
             messages=messages,
-            max_tokens=500,
-            temperature=0.7
+            max_tokens=400,
+            temperature=0.7, # Температура 0.7 добавляет боту креативности и убирает роботность
+            top_p=0.9
         )
 
-        ai_reply = response.choices[0].message.content
+        ai_reply = completion.choices[0].message.content
         return jsonify({'reply': ai_reply})
 
     except Exception as e:
-        print(f"!!! КРИТИЧЕСКАЯ ОШИБКА СЕРВЕРА: {e}")
-        return jsonify({'error': f"Ошибка сети или ИИ: {str(e)}"}), 500
+        print(f"Ошибка ИИ: {e}")
+        return jsonify({'error': f"Ошибка ИИ: {str(e)}"}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
