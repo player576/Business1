@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказ сайтов и Telegram-ботов под ключ</title>
-    <!-- Иконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,57 +15,31 @@
             --text-muted: #94a3b8;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            overflow-x: hidden;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         /* Главный блок лендинга */
-        .hero {
-            text-align: center;
-            max-width: 800px;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
+        .hero { text-align: center; max-width: 800px; animation: fadeIn 1s ease-out; }
+        .hero h1 { font-size: 3rem; margin-bottom: 20px; font-weight: 800; line-height: 1.2; }
         .hero .accent {
             background: linear-gradient(135deg, var(--accent-color), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-        }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; }
 
         /* Кнопки действий */
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+        .cta-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
 
         .btn {
             display: inline-flex;
@@ -76,35 +49,17 @@
             font-size: 1rem;
             font-weight: 600;
             border-radius: 12px;
-            border: none;
-            cursor: pointer;
             text-decoration: none;
+            cursor: pointer;
+            border: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-primary {
-            background: #24a1de; /* Фирменный цвет Telegram */
-            color: white;
-            box-shadow: 0 4px 20px rgba(36, 161, 222, 0.3);
-        }
+        .btn-primary { background: #24a1de; color: white; box-shadow: 0 4px 20px rgba(36, 161, 222, 0.3); }
+        .btn-primary:hover { background: #1e83b6; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(36, 161, 222, 0.5); }
 
-        .btn-primary:hover {
-            background: #1e83b6;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(36, 161, 222, 0.5);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--accent-purple), #c084fc);
-            color: white;
-            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
-        }
-
-        .btn-secondary:hover {
-            opacity: 0.95;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(79, 70, 229, 0.5);
-        }
+        .btn-secondary { background: linear-gradient(135deg, var(--accent-purple), #c084fc); color: white; box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3); }
+        .btn-secondary:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(79, 70, 229, 0.5); }
 
         /* Виджет AI-Чата */
         .chat-widget {
@@ -124,11 +79,7 @@
             overflow: hidden;
         }
 
-        .chat-widget.hidden {
-            transform: translateY(40px) scale(0.92);
-            opacity: 0;
-            pointer-events: none;
-        }
+        .chat-widget.hidden { transform: translateY(40px) scale(0.92); opacity: 0; pointer-events: none; }
 
         .chat-header {
             padding: 15px 20px;
@@ -139,193 +90,33 @@
             align-items: center;
         }
 
-        .chat-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .chat-title { display: flex; align-items: center; gap: 12px; }
+        .chat-title i { font-size: 1.4rem; color: var(--accent-color); }
+        .chat-title h4 { font-size: 1rem; font-weight: 600; }
+        .chat-title span { font-size: 0.75rem; color: var(--text-muted); display: block; }
 
-        .chat-title i {
-            font-size: 1.4rem;
-            color: var(--accent-color);
-        }
+        .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: color 0.2s; }
+        .close-btn:hover { color: #ef4444; }
 
-        .chat-title h4 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: rgba(15, 23, 42, 0.2); }
 
-        .chat-title span {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: block;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .key-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        
-        .key-btn:hover {
-            color: var(--accent-color);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.8rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover {
-            color: #ef4444;
-        }
-
-        /* Панель настройки ключа */
-        .secret-key-area {
-            background: rgba(15, 23, 42, 0.9);
-            padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            gap: 8px;
-        }
-
-        .secret-key-area.hidden {
-            display: none;
-        }
-
-        .secret-key-area input {
-            flex: 1;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 12px;
-            border-radius: 8px;
-            color: white;
-            font-size: 0.85rem;
-            outline: none;
-        }
-
-        .secret-key-area button {
-            background: var(--accent-purple);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: rgba(15, 23, 42, 0.2);
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 0.95rem;
-            line-height: 1.45;
-            word-wrap: break-word;
-            animation: messageSlide 0.3s ease-out;
-        }
-
-        .message.bot {
-            background-color: rgba(255, 255, 255, 0.06);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-
-        .message.user {
-            background: linear-gradient(135deg, var(--accent-purple), #6366f1);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 16px; font-size: 0.95rem; line-height: 1.45; word-wrap: break-word; animation: messageSlide 0.3s ease-out; }
+        .message.bot { background-color: rgba(255, 255, 255, 0.06); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.03); }
+        .message.user { background: linear-gradient(135deg, var(--accent-purple), #6366f1); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 
         /* Поле ввода сообщений */
-        .chat-input-area {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            background-color: rgba(30, 41, 59, 0.7);
-        }
+        .chat-input-area { padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); background-color: rgba(30, 41, 59, 0.7); }
+        .chat-input-area input { flex: 1; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 12px; color: white; outline: none; font-size: 0.95rem; transition: border-color 0.2s; }
+        .chat-input-area input:focus { border-color: var(--accent-color); }
+        .chat-input-area button { background: var(--accent-color); border: none; color: var(--bg-color); width: 45px; height: 45px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+        .chat-input-area button:hover { background: #00c6ff; transform: scale(1.05); }
 
-        .chat-input-area input {
-            flex: 1;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 16px;
-            border-radius: 12px;
-            color: white;
-            outline: none;
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
-
-        .chat-input-area input:focus {
-            border-color: var(--accent-color);
-        }
-
-        .chat-input-area button {
-            background: var(--accent-color);
-            border: none;
-            color: var(--bg-color);
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .chat-input-area button:hover {
-            background: #00c6ff;
-            transform: scale(1.05);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes messageSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 480px) {
             .hero h1 { font-size: 2.2rem; }
-            .chat-widget {
-                width: 100%;
-                height: 100%;
-                bottom: 0;
-                right: 0;
-                border-radius: 0;
-            }
+            .chat-widget { width: 100%; height: 100%; bottom: 0; right: 0; border-radius: 0; }
         }
     </style>
 </head>
@@ -356,21 +147,12 @@
                     <span>На базе Gemini AI</span>
                 </div>
             </div>
-            <div class="header-actions">
-                <button id="toggle-key-settings" class="key-btn" title="Настройки API-ключа"><i class="fas fa-key"></i></button>
-                <button id="close-chat" class="close-btn">&times;</button>
-            </div>
-        </div>
-
-        <!-- Панель секретного ключа (Локальное хранилище) -->
-        <div id="key-area" class="secret-key-area hidden">
-            <input type="password" id="api-key-input" placeholder="Вставьте Gemini API Ключ...">
-            <button id="save-key-btn">Сохранить</button>
+            <button id="close-chat" class="close-btn">&times;</button>
         </div>
         
         <div id="chat-messages" class="chat-messages">
             <div class="message bot">
-                Привет! Я нейросеть-помощник разработчика. Помогаю продумать логику, составить техническое задание и определиться, какой именно сайт или бот нужен вашему бизнесу. Опишите вашу идею!
+                Привет! Я нейросеть-помощник разработчика Данила. Помогаю продумать логику, составить ТЗ и определиться с функциями вашего будущего сайта или бота. Опишите вашу идею!
             </div>
         </div>
 
@@ -380,86 +162,24 @@
         </div>
     </div>
 
-    <!-- Подключаем модуль Google AI напрямую -->
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
-      }
-    </script>
-
-    <script type="module">
-        import { GoogleGenerativeAI } from "@google/generative-ai";
-
+    <script>
         const openChatBtn = document.getElementById('open-ai-chat');
         const closeChatBtn = document.getElementById('close-chat');
         const chatWidget = document.getElementById('chat-widget');
         const sendBtn = document.getElementById('send-btn');
         const chatInput = document.getElementById('chat-input');
         const chatMessages = document.getElementById('chat-messages');
-        
-        const keyArea = document.getElementById('key-area');
-        const apiKeyInput = document.getElementById('api-key-input');
-        const saveKeyBtn = document.getElementById('save-key-btn');
-        const toggleKeySettings = document.getElementById('toggle-key-settings');
 
-        let chatSession = null;
+        // Уникальный ID, чтобы сервер помнил историю именно этого пользователя
+        const userId = 'user_' + Math.random().toString(36).substr(2, 9);
 
-        // Получаем ключ из секретного LocalStorage браузера
-        function getSavedApiKey() {
-            return localStorage.getItem('gemini_secret_api_key') || "";
-        }
-
-        // Инициализация сессии Gemini
-        function initGemini() {
-            const savedKey = getSavedApiKey();
-            if (!savedKey) {
-                // Если ключа нет, показываем панель ввода
-                keyArea.classList.remove('hidden');
-                return null;
-            }
-            try {
-                const ai = new GoogleGenerativeAI(savedKey);
-                const model = ai.getGenerativeModel({ 
-                    model: "gemini-2.5-flash",
-                    systemInstruction: "Ты — умный AI-ассистент на сайте веб-разработчика. Твоя задача — помогать клиентам сформулировать их идею для сайта или Telegram-бота, отвечать на вопросы по веб-разработке и мягко подводить их к тому, чтобы они нажали кнопку 'Связаться с поддержкой' для обсуждения заказа с реальным разработчиком. Будь вежливым, профессиональным и лаконичным."
-                });
-                
-                return model.startChat({ history: [] });
-            } catch (e) {
-                console.error("Ошибка инициализации модели:", e);
-                return null;
-            }
-        }
-
-        // Кнопка сохранения ключа
-        saveKeyBtn.addEventListener('click', () => {
-            const key = apiKeyInput.value.trim();
-            if (key) {
-                localStorage.setItem('gemini_secret_api_key', key);
-                keyArea.classList.add('hidden');
-                chatSession = initGemini();
-                appendMessage("API-ключ успешно сохранен в ваш браузер! Я готов к работе.", "bot");
-            }
-        });
-
-        // Показать/скрыть настройки ключа по кнопке с иконкой ключа
-        toggleKeySettings.addEventListener('click', () => {
-            keyArea.classList.toggle('hidden');
-            apiKeyInput.value = getSavedApiKey();
-        });
+        // ВНИМАНИЕ: Замени адрес ниже на твою реальную ссылку, которую выдал хостинг Render!
+        // Пример: 'https://danil-gemini-backend.onrender.com/api/chat'
+        const BACKEND_URL = 'https://ТВОЙ-ПРОЕКТ.onrender.com/api/chat';
 
         openChatBtn.addEventListener('click', () => {
             chatWidget.classList.remove('hidden');
             chatInput.focus();
-            
-            const currentKey = getSavedApiKey();
-            if (!currentKey) {
-                keyArea.classList.remove('hidden');
-            } else if (!chatSession) {
-                chatSession = initGemini();
-            }
         });
 
         closeChatBtn.addEventListener('click', () => {
@@ -473,23 +193,32 @@
             appendMessage(text, 'user');
             chatInput.value = '';
 
-            if (!chatSession) {
-                chatSession = initGemini();
-                if (!chatSession) {
-                    appendMessage("Пожалуйста, сохраните корректный API-ключ в панели настроек сверху (иконка ключа).", 'bot');
-                    return;
-                }
-            }
-
             const typingMessage = appendMessage("Думаю...", 'bot');
 
+            // Проверка, изменил ли ты ссылку на бэкенд
+            if (BACKEND_URL.includes("ТВОЙ-ПРОЕКТ")) {
+                typingMessage.innerText = "Ошибка: Замените строку 'ТВОЙ-ПРОЕКТ' в коде index.html на реальную ссылку вашего сервера от Render.";
+                return;
+            }
+
             try {
-                const result = await chatSession.sendMessage(text);
-                const responseText = await result.response.text();
-                typingMessage.innerText = responseText;
+                // Отправляем сообщение на твой сервер в облаке Render
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, message: text })
+                });
+                
+                const data = await response.json();
+                
+                if (data.reply) {
+                    typingMessage.innerText = data.reply;
+                } else {
+                    typingMessage.innerText = "Ошибка ИИ: " + (data.error || "Неизвестный сбой");
+                }
             } catch (error) {
-                console.error("Ошибка Gemini:", error);
-                typingMessage.innerText = "Произошла ошибка при запросе. Убедитесь, что ваш API-ключ активен и верен.";
+                console.error("Ошибка сети:", error);
+                typingMessage.innerText = "Не удалось соединиться с сервером. Проверьте, запущен ли ваш Web Service на Render и активна ли ссылка.";
             }
         }
 
