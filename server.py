@@ -36,6 +36,30 @@ def chat():
         return jsonify({'error': 'Сообщение не может быть пустым'}), 400
 
     try:
+        # Если это новый пользователь, создаем сессию
+        if user_id not in chat_sessions:
+            # Используем базовую модель gemini-1.5-flash, доступную всем бесплатным ключам
+            model = genai.GenerativeModel(
+                model_name="gemini-1.5-flash", 
+                system_instruction=SYSTEM_INSTRUCTION
+            )
+            chat_sessions[user_id] = model.start_chat(history=[])
+
+        chat_session = chat_sessions[user_id]
+        response = chat_session.send_message(user_message)
+        
+        return jsonify({'reply': response.text})
+
+    except Exception as e:
+        # Этот принт выведет точную ошибку прямо в консоль Render Logs
+        print(f"!!! КРИТИЧЕСКАЯ ОШИБКА GEMINI API: {e}")
+        return jsonify({'error': f'Ошибка нейросети: {str(e)}'}), 500
+
+
+    if not user_message:
+        return jsonify({'error': 'Сообщение не может быть пустым'}), 400
+
+    try:
         # Если это новый пользователь, создаем для него новую сессию чата
         if user_id not in chat_sessions:
             model = genai.GenerativeModel(
