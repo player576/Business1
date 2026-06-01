@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заказ, сайтов и Telegram-ботов под ключ2</title>
+    <title>Заказ сайтов и Telegram-ботов под ключ2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -38,14 +38,14 @@
         }
         .hero p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; }
 
-        /* Кнопки действий */
-        .cta-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        /* Кнопки действий на главном экране */
+        .cta-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
 
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 15px 35px;
+            padding: 15px 30px;
             font-size: 1rem;
             font-weight: 600;
             border-radius: 12px;
@@ -55,11 +55,26 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Кнопка "Связаться со мной" */
         .btn-primary { background: #24a1de; color: white; box-shadow: 0 4px 20px rgba(36, 161, 222, 0.3); }
         .btn-primary:hover { background: #1e83b6; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(36, 161, 222, 0.5); }
 
+        /* Кнопка "Мои проекты" */
+        .btn-projects { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; box-shadow: 0 4px 20px rgba(0, 114, 255, 0.3); }
+        .btn-projects:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(0, 114, 255, 0.5); }
+
+        /* Кнопка открытия AI чата */
         .btn-secondary { background: linear-gradient(135deg, var(--accent-purple), #c084fc); color: white; box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3); }
         .btn-secondary:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(79, 70, 229, 0.5); }
+
+        /* Текст-описание под кнопками проектов */
+        .projects-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            line-height: 1.5;
+            animation: fadeIn 1.2s ease-out;
+        }
 
         /* Виджет AI-Чата */
         .chat-widget {
@@ -104,59 +119,6 @@
         .message.bot { background-color: rgba(255, 255, 255, 0.06); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.03); }
         .message.user { background: linear-gradient(135deg, var(--accent-purple), #6366f1); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Панель кнопок быстрых действий */
-        .chat-quick-actions {
-            padding: 5px 15px;
-            background-color: rgba(30, 41, 59, 0.4);
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        
-        .action-btn {
-            background: rgba(255, 255, 255, 0.07);
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-        
-        .action-btn:hover {
-            background: var(--accent-purple);
-            border-color: var(--accent-purple);
-            transform: translateY(-1px);
-        }
-
-        /* Стильная кнопка-ссылка на Telegram внутри сообщения */
-        .inner-tg-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            margin: 10px 0;
-            background-color: #24a1de;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 12px rgba(36, 161, 222, 0.2);
-            transition: all 0.2s ease;
-        }
-        
-        .inner-tg-btn:hover {
-            background-color: #1e83b6;
-            box-shadow: 0 6px 16px rgba(36, 161, 222, 0.4);
-            transform: translateY(-1px);
-        }
-
         /* Поле ввода сообщений */
         .chat-input-area { padding: 15px; display: flex; gap: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); background-color: rgba(30, 41, 59, 0.7); }
         .chat-input-area input { flex: 1; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 12px; color: white; outline: none; font-size: 0.95rem; transition: border-color 0.2s; }
@@ -184,9 +146,20 @@
                 <a href="https://t.me/Danilduolingoenglisnurok" target="_blank" class="btn btn-primary">
                     <i class="fab fa-telegram-plane"></i> Связаться со мной
                 </a>
+                
+                <a href="https://t.me/passwordgames" target="_blank" class="btn btn-projects">
+                    <i class="fas fa-code"></i> Мои проекты
+                </a>
+
                 <button id="open-ai-chat" class="btn btn-secondary">
                     <i class="fas fa-robot"></i> Чат с AI Помощником
                 </button>
+            </div>
+
+            <div class="projects-desc">
+                У меня есть два проекта.<br>
+                Первый проект — это ребусы, а второй — это собственный язык программирования.<br>
+                Заходи в Telegram-канал и смотри!
             </div>
         </div>
     </main>
@@ -209,11 +182,6 @@
             </div>
         </div>
 
-        <!-- Кнопка "Мои проекты" над полем ввода -->
-        <div class="chat-quick-actions">
-            <button class="action-btn" id="projects-btn"><i class="fas fa-folder-open"></i> Мои проекты</button>
-        </div>
-
         <div class="chat-input-area">
             <input type="text" id="chat-input" placeholder="Введите ваш вопрос...">
             <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
@@ -227,11 +195,8 @@
         const sendBtn = document.getElementById('send-btn');
         const chatInput = document.getElementById('chat-input');
         const chatMessages = document.getElementById('chat-messages');
-        const projectsBtn = document.getElementById('projects-btn');
 
-        // Уникальный ID, чтобы сервер помнил историю именно этого пользователя
         const userId = 'user_' + Math.random().toString(36).substr(2, 9);
-
         const BACKEND_URL = 'https://business2-yd3x.onrender.com/api/chat';
 
         openChatBtn.addEventListener('click', () => {
@@ -243,31 +208,6 @@
             chatWidget.classList.add('hidden');
         });
 
-        // Функция кнопки быстрых действий "Мои проекты"
-        projectsBtn.addEventListener('click', () => {
-            // Выводим реплику пользователя
-            appendMessage("Какие у тебя проекты?", 'user');
-            
-            // Выводим кастомный блок ответа с кнопкой-ссылкой
-            const botDiv = document.createElement('div');
-            botDiv.classList.add('message', 'bot');
-            
-            botDiv.innerHTML = `
-                <div>У меня есть два проекта.</div>
-                <a href="https://t.me/passwordgames" target="_blank" class="inner-tg-btn">
-                    <i class="fab fa-telegram-plane"></i> Наш Telegram канал
-                </a>
-                <div>
-                    Первый проект — это ребусы.<br>
-                    А второй — это язык программирования.<br>
-                    Заходи в telegram канал и смотри!
-                </div>
-            `;
-            
-            chatMessages.appendChild(botDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        });
-
         async function sendMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
@@ -276,11 +216,6 @@
             chatInput.value = '';
 
             const typingMessage = appendMessage("Думаю...", 'bot');
-
-            if (BACKEND_URL.includes("ТВОЙ-ПРОЕКТ")) {
-                typingMessage.innerText = "Ошибка: Замените строку 'ТВОЙ-ПРОЕКТ' в коде index.html на реальную ссылку вашего сервера от Render.";
-                return;
-            }
 
             try {
                 const response = await fetch(BACKEND_URL, {
@@ -302,7 +237,6 @@
             }
         }
 
-        // Изменил функцию appendMessage на innerHTML, чтобы бот мог рендерить HTML, если нужно
         function appendMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender);
