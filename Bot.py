@@ -2,29 +2,38 @@ import os
 import random
 from telebot import TeleBot, types
 
-# Вместо 'ТВОЙ_ТОКЕН_БОТА' вставь токен, который ты получил в @BotFather
-TOKEN = '8818026861:AAGyUAamOBkZeWxkyc3c4IN0G01TO_ZCQOM'
+# Вставь сюда свой токен от @BotFather
+TOKEN = '8818026861:AAFhIdCEeGi6TNGxL_c6JuMYG6BsqS8LxbU'
 bot = TeleBot(TOKEN)
 
-# Временное хранилище данных о заказах в памяти
-# Структура: { user_id: { 'type': '', 'details': '', 'contact': '' } }
+# Хранилище для шагов анкеты
 user_orders = {}
 
-# Шаг 1: Старт бота и первый вопрос
+# Функция для автоматического поиска папки Загрузок на Android/планшете
+def get_save_path():
+    # Стандартный путь к внутренней памяти на большинстве Android устройств
+    android_download_path = "/storage/emulated/0/Download"
+    
+    if os.path.exists(android_download_path):
+        return os.path.join(android_download_path, "заказы.txt")
+    else:
+        # Если путь выше недоступен (например, это iOS или ограничения прав),
+        # сохраняем в ту же папку, где лежит сам скрипт
+        return "заказы.txt"
+
+# Шаг 1: Старт
 @bot.message_handler(commands=['start', 'help'])
 def start_order(message):
     user_id = message.chat.id
-    # Инициализируем пустую анкету для пользователя
     user_orders[user_id] = {'type': '', 'details': '', 'contact': ''}
     
     msg = bot.send_message(
         user_id, 
         "📋 Начинаем оформление заказа!\n\nШаг 1 из 3: Какой заказ вы хотите? (Например: Лендинг, Интернет-магазин, Telegram-бот)"
     )
-    # Регистрируем переход к следующему шагу
     bot.register_next_step_handler(msg, process_type_step)
 
-# Шаг 2: Получаем тип заказа и спрашиваем пожелания
+# Шаг 2: Тип заказа
 def process_type_step(message):
     user_id = message.chat.id
     if user_id not in user_orders:
@@ -38,7 +47,7 @@ def process_type_step(message):
     )
     bot.register_next_step_handler(msg, process_details_step)
 
-# Шаг 3: Получаем пожелания и спрашиваем контакты
+# Шаг 3: Пожелания
 def process_details_step(message):
     user_id = message.chat.id
     if user_id not in user_orders:
@@ -52,7 +61,7 @@ def process_details_step(message):
     )
     bot.register_next_step_handler(msg, process_contact_step)
 
-# Шаг 4: Получаем контакты, генерируем номер и сохраняем TXT файл
+# Шаг 4: Контакты, генерация случайного номера и сохранение
 def process_contact_step(message):
     user_id = message.chat.id
     if user_id not in user_orders:
@@ -61,10 +70,10 @@ def process_contact_step(message):
     user_orders[user_id]['contact'] = message.text
     data = user_orders[user_id]
     
-    # Генерируем случайный четырехзначный номер заказа
+    # Генерируем случайный четырехзначный номер
     order_number = random.randint(1000, 9999)
     
-    # Формируем красивый текст для сохранения
+    # Формируем текст
     file_content = (
         f"=== ЗАКАЗ №{order_number} ===\n"
         f"Тип заказа: {data['type']}\n"
@@ -73,27 +82,34 @@ def process_contact_step(message):
         f"===========================\n\n"
     )
     
-    # Имя файла, в который будут дописываться заказы
-    filename = "заказы.txt"
+    full_path = get_save_path()
     
     try:
-        # Открываем файл в режиме 'a' (append), чтобы новые заказы добавлялись вниз, а старые не стирались
-        with open(filename, "a", encoding="utf-8") as file:
+        # Запись в файл с принудительным сохранением на диск
+        with open(full_path, "a", encoding="utf-8") as file:
             file.write(file_content)
+            file.flush() # Выталкиваем данные из буфера памяти прямо в файл
+            os.fsync(file.fileno()) # Гарантируем, что ОС записала файл на флеш-память
             
+        print(f"[УСПЕХ] Новый заказ №{order_number} записан по пути: {full_path}")
+        
         bot.send_message(
             user_id, 
             f"🎉 Заказ успешно оформлен!\n\nВашему заказу присвоен номер: 🔥 №{order_number} 🔥\n\n"
-            f"Данные сохранены в файл '{filename}' на устройстве разработчика. Спасибо!"
+            f"Данные сохранены на планшете в файл 'заказы.txt'. Спасибо!"
         )
+    except PermissionError:
+        # Если у самого Python-приложения нет доступа к памяти планшета
+        print("[ОШИБКА] Нет прав на запись в указанную папку!")
+        bot.send_message(user_id, "❌ Ошибка: У приложения Python нет прав на запись файлов в память планшета. Проверь настройки разрешений приложения.")
     except Exception as e:
-        bot.send_message(user_id, f"❌ Ошибка при сохранении файла на планшете: {e}")
+        print(f"[ОШИБКА] Ошибка при записи: {e}")
+        bot.send_message(user_id, f"❌ Ошибка при сохранении файла: {e}")
     
-    # Очищаем данные пользователя из памяти после завершения
     del user_orders[user_id]
 
-# Запуск постоянной работы бота
 if __name__ == '__main__':
     print("Бот успешно запущен локально и ждет заказов...")
+    print(f"Файлы будут сохраняться по пути: {get_save_path()}")
     bot.infinity_polling()
-          
+    
